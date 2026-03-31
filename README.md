@@ -1,4 +1,4 @@
-# 📰 Đồ Án Ký Tốt Nghiệp / Thực Tập: Hệ Thống Báo Điện Tử "Ký Ức Làm Báo" - VOV
+# Thực Tập: Hệ Thống Báo Điện Tử "Ký Ức Làm Báo" - VOV
 *(Kiến trúc: ReactJS + TypeScript + Vite Single Page Application)*
 
 > **Tóm tắt dự án:** Đây là một công trình **Migration & Refactoring** (Chuyển đổi và Tái cấu trúc) toàn diện. Dự án lấy dữ liệu đầu vào là tập hợp các tệp tĩnh rời rạc (Static HTML/CSS/JS) được trích xuất/clone từ hệ thống báo điện tử "Ký ức làm báo" của Đài Tiếng Nói Việt Nam (VOV). Mục tiêu của dự án là xây dựng lại toàn bộ giao diện này dưới dạng một ứng dụng **Single Page Application (SPA)** hiện đại, mượt mà, áp dụng mô hình Component hóa để dễ dàng mở rộng, đồng thời cải thiện hiệu suất bằng các cơ chế tự động hóa dữ liệu (Scripting) và tối ưu hóa quy trình triển khai mạng thực tế (Deployment).
