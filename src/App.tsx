@@ -18,6 +18,7 @@ import QuachThuPhuong2 from './pages/articles/QuachThuPhuong2';
 import SaoViet313 from './pages/articles/SaoViet313';
 
 import SearchPage from './pages/SearchPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
   return (
@@ -72,6 +73,9 @@ function App() {
         
         <Route path="/sao-viet-313" element={<SaoViet313 />} />
         <Route path="/sao-viet-313.html" element={<SaoViet313 />} />
+
+        {/* 404 Route Catch-all */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
   );
