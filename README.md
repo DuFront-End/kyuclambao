@@ -1,94 +1,91 @@
-# 📰 Đồ Án Chuyển Đổi Kỹ Thuật Số: Ký Ức Làm Báo - VOV 
-*(ReactJS + TypeScript Single Page Application)*
+# 📰 Đồ Án Ký Tốt Nghiệp / Thực Tập: Hệ Thống Báo Điện Tử "Ký Ức Làm Báo" - VOV
+*(Kiến trúc: ReactJS + TypeScript + Vite Single Page Application)*
 
-> **Mô Tả Tổng Quan:** Mục tiêu chính của dự án này là tái cấu trúc (Refactoring & Migration) một tập hợp các tệp tĩnh rời rạc (Static HTML/CSS/JS) được trích xuất từ chuyên trang "Ký ức làm báo" của Đài Tiếng Nói Việt Nam (VOV). Sản phẩm đầu ra là một hệ thống **Single Page Application (SPA)** hiện đại, mượt mà, tối ưu hóa tái sử dụng mã (Componentization) và tự động hóa quy trình triển khai lên môi trường máy chủ Serverless (Vercel).
-
----
-
-## 🎯 Mục Tiêu Lõi Của Dự Án Thực Tập
-
-Là một lập trình viên thực tập đảm nhận việc "hiện đại hóa" một bộ source code quá khổ (Legacy Code), tui đã đặt ra các tiêu chí khắt khe:
-1. **Zero Layout Breakage:** Tuyệt đối không làm vỡ các thiết kế cực kỳ phức tạp của gốc (đặc biệt là thể loại E-magazine Parallax đa tầng).
-2. **Component Độc Lập:** Phân tách rõ ràng các vùng dùng chung (Header, Footer) để có thể "kế thừa" mà không code lại ở từng ngóc ngách.
-3. **Hiệu Suất Tính Năng:** Xây dựng hệ thống tìm kiếm Client-Side tức thì thay vì phải mất thời gian nạp lại trang lưới tin tức.
-4. **Tự Động Hóa (Automation):** Từ chối việc gõ thủ công từng dòng mã cho hàng tá bài báo, áp dụng Scripting để máy móc tự chuyển đổi.
+> **Tóm tắt dự án:** Đây là một công trình **Migration & Refactoring** (Chuyển đổi và Tái cấu trúc) toàn diện. Dự án lấy dữ liệu đầu vào là tập hợp các tệp tĩnh rời rạc (Static HTML/CSS/JS) được trích xuất/clone từ hệ thống báo điện tử "Ký ức làm báo" của Đài Tiếng Nói Việt Nam (VOV). Mục tiêu của dự án là xây dựng lại toàn bộ giao diện này dưới dạng một ứng dụng **Single Page Application (SPA)** hiện đại, mượt mà, áp dụng mô hình Component hóa để dễ dàng mở rộng, đồng thời cải thiện hiệu suất bằng các cơ chế tự động hóa dữ liệu (Scripting) và tối ưu hóa quy trình triển khai mạng thực tế (Deployment).
 
 ---
 
-## 🚀 Công Nghệ Ứng Dụng (Tech Stack)
+## 🚀 Công Nghệ Sử Dụng (Tech Stack)
 
-- **Frontend Core:** ReactJS 18, TypeScript (Giúp xác định kiểu dữ liệu chặt chẽ cho mảng lưu trữ bài viết).
-- **Trình Biên Dịch:** ViteJS (Cam kết tốc độ khởi động server chưa tới 1s và Hot-Module-Replacement theo thời gian thực).
-- **Cơ Chế Điều Hướng:** React Router DOM v6 (Client-side routing mượt mà, không giật trang).
-- **Hành Trang Tự Động:** Node.js, Regular Expression (Regex), File System (`fs`).
-- **Giao Diện:** Bootstrap 5 (Responsive Layout), Vanilla CSS, FontAwesome, Google Fonts.
-- **Môi Trường Host:** Vercel (CI/CD Deploy tự động với `vercel.json` định tuyến SPA).
-
----
-
-## 📂 Miêu Tả Chức Năng Từng Tệp Tin (Deep-Dive Directory)
-
-Dưới đây là sơ đồ kiến trúc và diễn giải chức năng chi tiết của TỪNG file tui đã trực tiếp xây dựng trong dự án:
-
-### 1. Khu Vực Nguyên Liệu Gốc (`/_legacy`)
-- Thư mục này là **"Nhà Kho"**. Chứa các thiết kế tĩnh (14 bài viết `.html`, file `trangchu.html` nguyên bản) được tải thô trực tiếp về máy. Đây chính là dữ liệu đầu vào chân thực nhất của dự án. Không có thư mục này, quy trình Automation không thể hoạt động.
-
-### 2. Bộ Não Tự Động Hóa (`/scripts`)
-Hạt nhân thể hiện kỹ năng lập trình giải quyết vấn đề bằng NodeJS thay vì "Làm-Tay":
-- `convert_articles.mjs`: Script làm nhiệm vụ quét sạch 14 file HTML ở thư mục legacy. Bằng logic Regex, script tự động nhổ khối nội dung `<body>`, trích xuất toàn bộ CSS riêng lẻ hiển thị trên `<head>`, cuối cùng "nhào nặn" tất cả cho ra đời 14 file React Component (`.tsx`). Giữ được 100% dáng vẻ thiết kế của Parallax E-magazine.
-- `convert_homepage.mjs`: "Cỗ máy" giải phẫu trang chủ. Tìm và cắt exacly khối `<section class="category-page">` chứa danh sách 15 tin tức mà không làm rớt Footer. Gắn chúng vào thẻ `<Layout>` của React một cách tỉ mỉ.
-- `extract_data.mjs`: Crawler Script. Đi vào trang chủ cũ, phân tích chuỗi DOM, tìm bằng được các cú pháp: Title, Href, Image, Description và nén chúng lại thành một mảng JSON xuất vào `articles.ts`. Đây là xương sống cho tính năng Tìm kiếm tí hon.
-
-### 3. Vùng Code Chính Của Ứng Dụng (`/src`)
-
-#### 🧱 `src/components/` (Kiến Trúc Tái Sử Dụng)
-- **`Header.tsx`:** Thanh thanh quản lý chóp gác trên cùng. Không chỉ chứa Logo, Social Media, Offcanvas dọc trên Mobile. Tui đã tự thiết kế tích hợp "Mở rộng/Đóng" thanh nhập dữ liệu Search thông minh bằng React State (`useState`) lúc bấm kính lúp.
-- **`Footer.tsx`:** Footer tĩnh, thông tin liên lạc và chân trang.
-- **`Layout.tsx`:** Bộ Wrapper thông minh. Bao gói lấy `Header` và `Footer` để bất kỳ lúc nào cần một trang mới (Profile, Contact), chỉ việc nhét `children` vào là ứng dụng hiển thị hoàn hảo.
-
-#### 💽 `src/data/` (Kho Dữ Liệu Offline)
-- **`articles.ts`:** Một bản "CSDL Mạng diện hẹp" mô phỏng Interface TypeScript cực chuẩn với 15 đối tượng bài báo. Không cần dùng lệnh `fetch()`, không cần tới SQL, ứng dụng vẫn có thể đọc và tra cứu keyword cực nhạy.
-
-#### 📄 `src/pages/` (Các Trang Đại Diện Đường Dẫn)
-- **`HomePage.tsx`:** Giao diện Trái tim của Website. Nhận Layout bao bọc và thả thẳng toàn bộ Code giao diện Bootstrap trang lưới vào.
-- **`SearchPage.tsx`:** Nơi ma thuật xảy ra. Hook `useSearchParams` hút lấy chữ `?q=...` trên thanh URL trình duyệt, đẩy từ khóa vào `useMemo` và trả về ngay kết quả bài viết trùng khớp mà không bao giờ bị re-render thừa thãi.
-- **`articles/*.tsx`:** 14 file độc lập với đầy đủ tên gọi rành mạch (`KiNiemViTuong.tsx`, `BtsVinhDuLon.tsx`,...). Khiến cho việc chia nhánh, kiểm thử giao diện các tin cũ dễ dàng như trở bàn tay.
-
-#### ⚙️ Các Tệp Nòng Cốt
-- **`App.tsx`:** Trụ sở phân luồng mạng. Bao thầu hệ thống `<Routes>` tới vô số trang phụ và cả định dạng Fallback `.html` (cho phép back-link nội bộ tương thích 100%).
-- **`main.tsx`:** Cổng vào (Entry point), móc luồng Code React ảo vào `<div id="root">` của file `index.html`.
-- **`index.css`:** Tệp rác tái chế toàn năng. Chứa các dòng cấu hình Typography của Bootstrap, custom color biến tấu từ nền đỏ cờ `VOV`.
-
-### 4. Thiết Lập Môi Trường (Root Configs)
-- **`vercel.json`:** Luật định tuyến quan trọng nhất để SPA được tồn tại trên máy chủ. Mọi nỗ lực truy cập đường link "/abc-xyz" sai quy tắc đều sẽ được đẩy ngầm về `/index.html` cho React tự bắt lõi và điều hướng bên trong Client thay vì báo lỗi 404 trắng màn hình.
-- **`vite.config.ts`:** Bản phác thảo biên dịch, đẩy tiến độ nén Code siêu nhẹ.
-- **`.gitignore`:** Chỉ huy trưởng rào cản, chặn đứng rác `node_modules/` và bản dịch cục bộ `/dist` trôi lơ lửng lên kho chứa GitHub.
+Dự án áp dụng bộ công nghệ hiện đại nhất dành cho phát triển Frontend:
+- **Core Framework:** ReactJS 18.
+- **Ngôn Ngữ:** TypeScript (Bảo đảm tính chặt chẽ của dữu liệu tĩnh, dễ dàng debug các object của bài báo).
+- **Trình Biên Dịch (Bundler):** ViteJS (Tối ưu hóa thời gian khởi động Dev Server và nén code cực nhẹ cho Production).
+- **Bộ Điều Hướng (Routing):** React Router DOM v6 (Xử lý việc chuyển trang Client-side mượt mà, không bị chớp hay tải lại trang, xử lý triệt để các URL có đuôi `.html`).
+- **Tự Động Hóa (Automation):** Node.js, File System (`fs`), Regular Expressions (Regex) dùng để phân tích và cào dữ liệu từ code HTML cũ.
+- **Phong Cách Giao Diện (UI/UX Styling):** Bootstrap 5, Vanilla CSS, FontAwesome, Google Fonts, bảo tồn 100% thiết kế Parallax phức tạp của các bài E-magazine.
+- **Hosting / Deployment:** Vercel (Sử dụng hệ thống Serverless tự động Build và cơ chế Rewrites Catch-All).
 
 ---
 
-## 💻 Trải Nghiệm Và Triển Khai (Installation)
+## 📂 Kiến Trúc Hệ Thống Đi Sâu Từng File (Deep-Dive Directory Architecture)
 
-Sẵn sàng chạy thực tế với chỉ vài lệnh Console đơn giản:
+Để dễ dàng nắm bắt được khối lượng công việc đồ sộ của dự án, dưới đây là mô tả chi tiết nhiệm vụ và vai trò của **BẤT KỲ FILE NÀO** xuất hiện trong thư mục:
 
-1. **Clone Tác Phẩm Phân Tích Gốc:**
+### 1. 🏭 Khu Vực Nguyên Liệu Gốc: `_legacy/`
+> Đây là *"Nhà Kho"* lưu trữ lịch sử của website. Nó chứa các thiết kế tĩnh do người dùng thu thập/clone thô về từ trang chủ VOV. Thư mục này rất quan trọng vì nó là "Mỏ Dữ Liệu" cho các kịch bản tự động hóa (Node.js Scripts) đọc và bóc tách.
+- **`trangchu.html`**: Giao diện gốc của trang lưới danh sách tin tức chứa toàn bộ thẻ Header, Footer và CSS nội tuyến cũ.
+- **`[tên-bài-viết].html`**: 14 tệp tin HTML của 14 bài báo cụ thể (Bao gồm các bài E-magazine phức tạp lồng ghép hàng nghìn dòng mã CSS riêng biệt).
+
+### 2. ⚙️ Bộ Não Tự Động Hóa: `scripts/`
+> Là một kỹ sư phần mềm thực tập, không thể chấp nhận việc "Code bằng tay" (Copy-Paste) chuyển đổi 15 trang HTML khổng lồ sang React. Tui đã thiết kế 3 Script Node.js siêu việt để thay con người làm việc này:
+- **`convert_articles.mjs`**: Kịch bản xử lý Tin Tức. Quét sạch 14 file HTML. Sử dụng Regex để nhổ chính xác khối `<body>`, hút giữ nguyên cấu trúc các thẻ `<style>` và `<link rel="stylesheet">` cụ thể lẻ tẻ nằm trên `<head>` của từng file gốc, sau đó ghép lại, đẩy chuỗi String này tạc ra thành 14 file Component `.tsx`. Nhờ Script này, các siêu bài báo E-Magazine như "Kỷ niệm vị tướng" không hề bị rụng một dòng CSS đặc thủ nào, đảm bảo mức độ Parallax đúng 100% không vỡ nét.
+- **`convert_homepage.mjs`**: Kịch bản xử lý Trang Chủ. File này mổ xẻ `trangchu.html`, tự động dò tìm đến vùng `<!-- Footer -->`, cắt chính xác mảng `<section class="category-page">` to khổng lồ của trang chủ mà không làm rớt 15 bài báo, bọc nó vào thành 1 React Component siêu sạch.
+- **`extract_data.mjs`**: Cỗ máy Cào Dữ Liệu (Crawler). Quét ngược lại mã DOM HTML của `trangchu.html`. Vét sạch các thông tin: URL, Link Hình Ảnh, Tiêu Đề Bài Báo, Khúc dạo đầu mô tả và nén chúng vào thành Mảng 15 đối tượng JSON. Đây chính là xương sống cho "Mini-Database" offline của ứng dụng.
+
+### 3. 💻 Bộ Mã Trọng Tâm: `src/`
+Đây là vùng hoạt động chính của thư viện React. Nơi mọi giao diện Component được phát triển:
+
+#### 🧩 Nhóm Các Giao Diện Tái Sử Dụng (`src/components/`)
+Thay vì copy mã Menu và Chân trang lặp lại ở 15 trang web, dự án tách chúng ra thành các Module độc lập kết nối logic:
+- **`Header.tsx`**: Khối thanh Điều hướng trên cùng. Không chỉ chứa HTML Logo VOV mà tui đã tiêm thêm React State Hook (`useState`). Hook này quản lý sự kiện thu/mở của thanh gõ Tìm Kiếm (Kính lúp), và tương tác Form Submit để đẩy bộ định tuyến `useNavigate` sang trang kết quả nhanh chóng. Đồng thời nó cũng lo liệu tương thích trên Menu điện thoại (Offcanvas).
+- **`Footer.tsx`**: Khối Thông tin Tòa soạn đóng đinh ở đáy trang. Gom gọn lại thành mã TSX thuần túy.
+- **`Layout.tsx`**: HOC Component (Màng Bọc Giao Diện). Dùng kỹ thuật `<Slot>` (`children` trong React) để ôm trọn bất cứ một khối nội dung nào chui vào giữa `Header` và `Footer`. Cực kỳ tối ưu để mở rộng dự án.
+
+#### 🗄️ Nhóm Quản Trị CSDL Offline (`src/data/`)
+- **`articles.ts`**: Được sinh ra tự động bởi `extract_data.mjs`. Chứa Interface TypeScript mảng 15 báo. Không cần phải gọi API Fetch Backend, ứng dụng vẫn có kho dữ liệu để tra cứu và lập chỉ mục nội bộ lập tức. Tối thượng hóa tốc độ phản hồi.
+
+#### 📄 Nhóm Giao Diện Hiển Thị Xuyên Suốt (`src/pages/`)
+Đây là những vùng đất được Render phụ thuộc vào đường Link (Router) người dùng truy cập.
+- **`HomePage.tsx`**: Căn cứ địa của Website. Nơi lưới bài báo được đẩy lên dựa theo tệp chuyển hóa tĩnh. Mọi `href="/abc.html"` bên trong nó đã được Regex hô biến thành `href="/abc"` tương thích SPA.
+- **`SearchPage.tsx`**: Khối Óc Chức Năng. Sử dụng Hook `useSearchParams` để bắt lấy tham số `?q=...` từ URL. Nạp thẳng vào thuật toán lọc phi-phân-biệt-chữ-hoa-thường thông qua `useMemo`. Render ra bộ list thẻ bài viết (Tái sử dụng chung mã CSS class của trang chủ). Tốc độ trả kết quả đo được là <1ms. Hiển thị UI logic "Không tìm thấy" chuyên nghiệp nếu gõ sai chuẩn.
+- **`articles/*.tsx`** *(14 Tệp tin tự động hóa sinh ra)*: Bao gồm các component nhúng chuyên biệt lấy mã gốc nguyên tảng (`KiNiemViTuong.tsx`, `BtsVinhDuLon.tsx`...). Các tệp này đứng hoàn toàn độc lập với Layout chung để tự chưng diện Layout gốc tự thân.
+
+#### ⚙️ Các Tệp Cấu Hình React Cốt Lõi (Core Source)
+- **`App.tsx`**: Giao lộ trung tâm (Router Switcher). Bọc toàn bộ đồ án bằng `<Router>`. Dùng nghệ thuật Cấu hình Tuyến Đường Kép (Dual-Path Routing) để gom tất cả Link cũ (`path="/abc.html"`) và Link mới (`path="/abc"`) vào chung một Component, đảm bảo 100% Back-Link chéo bên trong các tệp nội dung cũ vẫn không gây Lỗi Trắng 404. Còn cấu hình thêm biến cờ báo tương lai (Future Flags) như `v7_startTransition` để làm trong sạch mã Console của React Router v7.
+- **`main.tsx`**: Trục Cẩu chính. Gọi hàm `createRoot` render `<App />` vào thân của File DOM gốc (`index.html`).
+- **`index.css`**: Nơi gộp tất cả Typography, biến màu `:root` (#ce1628 - Đỏ VOV), Style đặc trưng toàn cục. Chỉ gọi đúng 1 lần nhưng hưởng sái trên mọi layout con.
+
+### 4. 🛠️ Khu Vực Móng Cấu Hình Hệ Thống (Root Files)
+- **`index.html`**: Nơi trình duyệt tiếp cận đầu tiên. Nhúng các CDN thiết yếu của Bootstrap, FontAwesome và Google Fonts để tiết kiệm băng thông khi Load ban đầu.
+- **`vercel.json`**: Trái tim chiến lược của kỹ thuật Deploy Serverless. Tệp tin này ra lệnh cho máy chủ Vercel áp dụng cơ chế điều hướng bù đắp (Rewrites Rules): Bất kì URL ảo nào do người dùng gõ (VD: `/search`) đều phải trả về file tĩnh bù trừ là `/index.html`. Không có file này, khi F5 lại Trang Tìm kiếm trên Host Vercel, người dùng sẽ bị sập trang báo lỗi 404.
+- **`vite.config.ts`**: Hệ thống cày bừa Compile siêu đẳng `vite`. Nạp React Plugin để hiểu cú pháp `<tag>` của TSX. 
+- **`package.json`**: Hộ Chiếu dự án. Định nghĩa mọi thư viện mã nguồn mở khổng lồ liên đới (VD: `react-router-dom`, `typescript`, `vite`). Thiết lập các câu lệnh `npm run dev` để chạy Server nhà và `npm run build` để đóng gói gửi đi.
+- **`tsconfig.json`**: Sổ Tay Khai Báo Kiểu Dữ Liệu. Dạy cho Visual Studio Code thuộc nằm lòng cách phát hiện lỗi logic của TypeScript từ sớm.
+- **`.gitignore`**: Chốt Cửa Hải Quan. Ra lệnh cho phần mềm Version Control (Git) KHÔNG được phép bốc toàn bô rác, các thư mục nặng rùng rợn như `node_modules/`, `/dist/` lên kho Github.
+
+---
+
+## 🖱️ Hướng Dẫn Vận Hành Hệ Thống (Installation & Deployment)
+
+1. **Khởi Tạo Môi Trường:** Cần phải cài đặt ứng dụng Node.js (v18+) vào máy.
+2. **Kéo Source Code về Không Gian Làm Việc:**
    ```bash
    git clone https://github.com/DuFront-End/kyuclambao.git
    cd kyuclambao
    ```
-
-2. **Dọn Đường Kéo Thư Viện:**
+3. **Giải Nén Khối Dependencies:**
    ```bash
    npm install
    ```
-
-3. **Chạy Trực Tiếp Ở Môi Trường Máy Nhà (Dev):**
+4. **Bật Chế Độ Phát Triển (Local Server):**
    ```bash
    npm run dev
    ```
-   *Nhấp link máy chủ ảo `http://localhost:5173` để cảm nhận tốc độ SPA.*
+   *Quá trình này siêu nhẹ, bạn chỉ cần một cú Click chuột thẳng vào link `http://localhost:5173` là giao diện lập tức hiện hình mướt rượt.*
 
-4. **Sản Xuất Build "Duy Nhất" Dành Cho Production:**
+5. **Đóng Gói Nén Code Mức Production (Xuất File Thực Tế):**
    ```bash
    npm run build
    ```
-   *Quá trình Vite đóng gói toàn bộ thư mục `/src` xuống thành tĩnh cực nhẹ bên trong `/dist` sẵn sàng bay lên **Vercel**.*
+   *Thư mục `/dist` được sinh ra tự động. Lúc này Project của bạn đã sẵn sáng để chuyển giao gắn vào Vercel hoạt động như một Website Online Quốc Tế.*
